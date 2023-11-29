@@ -45,54 +45,72 @@ namespace Calculatrice
 
         public void ShowResult()
         {
-            string operatorValue;
+            string operatorValue = "";
             bool operatorFinded = false;
 
-            double firstNumber, secondNumber;
-            string[] parts = history.Split('+', '-', 'x', '/');
-            if (double.TryParse(parts[0], out firstNumber) && double.TryParse(parts[1], out secondNumber))
+            List<int> firstNumber = new List<int>();
+            List<int> secondNumber = new List<int>();
 
-                foreach (var character in history)
+            foreach (var character in history)
+            {
+                switch (character)
                 {
-                    switch (character)
+                    case '+':
+                        operatorFinded = true;
+                        operatorValue = "+";
+                        break;
+                    case '-':
+                        operatorFinded = true;
+                        operatorValue = "-";
+                        break;
+                    case 'x':
+                        operatorFinded = true;
+                        operatorValue = "*";
+                        break;
+                    case '/':
+                        if (int.Parse(string.Concat(secondNumber)) != 0)
+                        {
+                            operatorValue = ":";
+                            operatorFinded = true;
+                        }
+                        else
+                        {
+                            History.Content = "Impossible de diviser par 0";
+                        }
+                        break;
+                }
+
+                if (!operatorFinded)
+                {
+                    if (character.ToString() != " ")
                     {
-                        case '+':
-                            operatorFinded = true;
-                            operatorValue = "+";
-                            break;
-                        case '-':
-                            operatorFinded = true;
-                            operatorValue = "-";
-                            break;
-                        case 'x':
-                            operatorFinded = true;
-                            operatorValue = "*";
-                            break;
-                        case '/':
-                            if (secondNumber != 0)
-                            {
-                                operatorValue = ":";
-                                operatorFinded = true;
-                            }
-                            else
-                            {
-                                History.Content = "Impossible de diviser par 0";
-                            }
-                            break;
-                        default:
-                            operatorFinded = false;
-                            break;
-                    }
-                    if (operatorFinded)
-                    {
-                        history = " ";
-                        History.Content = "0";
-
-
-
-                        result = "..";
+                        firstNumber.Add(character);
+                        MessageBox.Show("1 : " + character.ToString());
                     }
                 }
+                else
+                {
+                    if (character.ToString() != "+" && character.ToString() != "-" && character.ToString() != "*" && character.ToString() != "/")
+                    {
+                        if (character.ToString() != " ")
+                        {
+                            secondNumber.Add(character);
+                            MessageBox.Show("2 : " + character.ToString());
+                        }
+                    }
+                }
+
+                result = $"{string.Join("", firstNumber)} {operatorValue} {string.Join("", secondNumber)}";
+                MessageBox.Show(string.Join("", firstNumber));
+                /*MessageBox.Show(int.Parse(firstNumber).ToString());
+                Result.Content = int.Parse(string.Concat(firstNumber)).ToString();
+                MessageBox.Show(secondNumber.ToString());
+
+                history = " ";
+                History.Content = "0";*/
+            }
+            /*MessageBox.Show(string.Join(", ", firstNumber));
+            MessageBox.Show(string.Join(", ", secondNumber));*/
         }
 
         private void Button_Click_0(object sender, RoutedEventArgs e)
